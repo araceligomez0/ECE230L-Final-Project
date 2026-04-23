@@ -11,6 +11,7 @@ initial begin
 end
 
 always @(posedge clk or posedge rst) begin
+  
     if (rst)
         state <= 6'd0;
     else if (en)
