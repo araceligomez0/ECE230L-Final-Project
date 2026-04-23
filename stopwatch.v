@@ -3,7 +3,7 @@ module stopwatch(
     input clk,
     input rst,
     input en,
-    output reg [5:0] state
+    output reg [5:0] state //6-bits to represent the highest number 59
 );
 
 initial begin
