@@ -1,18 +1,19 @@
-// top.v
 module top 
 (
-    input clk,
-    input btnC,
-    input [15:0] sw,
-    output [15:0] led,
-    output [3:0] an,
-    output [6:0] seg
+    input clk,           // 100 MHz
+    input btnC,          // reset
+    input [15:0] sw,     // switches
+    output [15:0] led,    //LEDs
+    output [3:0] an,     //Outputs for 7-segment display
+    output [6:0] seg     //Outputs for 7-segment display
+);
 );
 
 /******** DO NOT MODIFY ********/
-wire clk_1Hz;
-wire btnC_1Hz;
+wire clk_1Hz;       //Generate Internal 1Hz Clock
+wire btnC_1Hz;     //Stretch load signal
 
+//If running simulation, output clock frequency is 100MHz, else 1Hz
 `ifndef SYNTHESIS
     assign clk_1Hz = clk;
 `else
@@ -20,6 +21,7 @@ wire btnC_1Hz;
     (.iclk(clk) , .rst(btnC) , .oclk(clk_1Hz));
 `endif
 
+// Check stopwatch/timer frequency
 initial begin
 `ifndef SYNTHESIS
     $display("Stopwatch/Timer Frequency set to 100MHz");
@@ -28,14 +30,16 @@ initial begin
 `endif
 end
 
+//Seven Segment Display Interface
 seven_segment_inf seven_segment_inf_inst (.clk(clk), .rst(btnC), .count(count) , .anode(an), .segs(seg));
 /********************************/
 
 wire [5:0] count;
 
-wire mode   = sw[0];
-wire run    = sw[1];
-wire load   = sw[2];
+// Control signals
+wire mode   = sw[0];        // 0 = stopwatch, 1 = timer
+wire run    = sw[1];        // 0 = pause, 1 = run
+wire load   = sw[2];        // 1 = load timer with load_value
 wire [5:0] load_value = sw[15:10];
 
 wire sw_en;
@@ -46,13 +50,10 @@ wire [5:0] timer_state;
 assign sw_en = (~mode) & run;
 assign tm_en = mode & run;
 
+// count shown on seven segment display
 assign count = mode ? timer_state : stopwatch_state;
 
-assign led[15:10] = timer_state;
-assign led[9]     = 1'b0;
-assign led[8:3]   = stopwatch_state;
-assign led[2:0]   = 3'b000;
-
+// Stopwatch Module Instance
 stopwatch stopwatch_inst (
     .clk(clk_1Hz),
     .rst(btnC),
@@ -60,6 +61,7 @@ stopwatch stopwatch_inst (
     .state(stopwatch_state)
 );
 
+// Timer Module Instance
 timer timer_inst (
     .clk(clk_1Hz),
     .rst(btnC),
@@ -68,5 +70,3 @@ timer timer_inst (
     .load_value(load_value),
     .state(timer_state)
 );
-
-endmodule
