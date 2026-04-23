@@ -7,7 +7,6 @@ module top
     output [3:0] an,     //Outputs for 7-segment display
     output [6:0] seg     //Outputs for 7-segment display
 );
-);
 
 /******** DO NOT MODIFY ********/
 wire clk_1Hz;       //Generate Internal 1Hz Clock
