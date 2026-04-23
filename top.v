@@ -52,6 +52,9 @@ assign tm_en = mode & run;
 // count shown on seven segment display
 assign count = mode ? timer_state : stopwatch_state;
 
+
+assign led = {timer_state, 1'b0, stopwatch_state, 3'b000};
+
 // Stopwatch Module Instance
 stopwatch stopwatch_inst (
     .clk(clk_1Hz),
@@ -69,3 +72,8 @@ timer timer_inst (
     .load_value(load_value),
     .state(timer_state)
 );
+
+
+
+
+endmodule
