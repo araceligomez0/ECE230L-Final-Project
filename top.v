@@ -41,21 +41,23 @@ wire run    = sw[1];        // 0 = pause, 1 = run
 wire load   = sw[2];        // 1 = load timer with load_value
 wire [5:0] load_value = sw[15:10];
 
+//Internal wires
 wire sw_en;
 wire tm_en;
 wire [5:0] stopwatch_state;
 wire [5:0] timer_state;
 
+//Enable only one mode at a time
 assign sw_en = (~mode) & run;
 assign tm_en = mode & run;
 
-// count shown on seven segment display
+//Count shown on seven segment display
 assign count = mode ? timer_state : stopwatch_state;
 
-
+//Count shown on led display
 assign led = {timer_state, 1'b0, stopwatch_state, 3'b000};
 
-// Stopwatch Module Instance
+//Stopwatch Module Instance
 stopwatch stopwatch_inst (
     .clk(clk_1Hz),
     .rst(btnC),
@@ -63,7 +65,7 @@ stopwatch stopwatch_inst (
     .state(stopwatch_state)
 );
 
-// Timer Module Instance
+//Timer Module Instance
 timer timer_inst (
     .clk(clk_1Hz),
     .rst(btnC),
@@ -72,8 +74,5 @@ timer timer_inst (
     .load_value(load_value),
     .state(timer_state)
 );
-
-
-
 
 endmodule
