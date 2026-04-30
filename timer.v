@@ -27,8 +27,8 @@ always @(posedge clk or posedge rst) begin
     else if (en)
         state <= (state == 6'd0) ? 6'd0 : (state - 6'd1);
     
-		//If neither load or enable are active, state remains the same.
-		else
+	//If neither load or enable are active, state remains the same.
+	else
         state <= state;
 end
 
